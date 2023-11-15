@@ -1,0 +1,14 @@
+{
+  "name": "aimlab-score-bot",
+  "version": "1.0.0",
+  "description": "discord bot that grabs aimlab scores and displays them",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Matt Mack",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^14.13.0"
+  }
+}
