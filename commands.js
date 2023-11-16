@@ -3,9 +3,27 @@ const puppeteer = require('puppeteer');
 
 
 module.exports = {
-    async getScore(user, task, timePeriod) {
+    async getScore(user, task, taskMode, timePeriod) {
+        if (taskMode == 'u') {
+            taskMode = '0';
+        } else if (taskMode == 'p') {
+            taskMode = '1';
+        } else if (taskMode == 's') {
+            taskMode = '2';
+        }
 
-        link = 'https://aimlabs.com/leaderboards?username=' + user + '&taskId=' + task + '&period=' + timePeriod;
+        if (timePeriod == 'a') {
+            timePeriod = 'all';
+        } else if (timePeriod == 'y') {
+            timePeriod = 'year';
+        } else if (timePeriod == 'm') {
+            timePeriod = 'month';
+        } else if (timePeriod == 'w') {
+            timePeriod = 'week';
+        }
+
+
+        link = 'https://aimlabs.com/leaderboards?username=' + user + '&taskId=' + task + '&period=' + timePeriod + '&taskMode=' + taskMode;
 
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
