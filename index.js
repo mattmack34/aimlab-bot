@@ -1,7 +1,6 @@
 const { Client, Events, GatewayIntentBits } = require('discord.js');
 const { token } = require('./config.json');
-
-var commands = require('./commands')
+var commands = require('./commands');
 
 const acceptableInputs = {
     accTask: ['gridshot', 'microshot'],
@@ -22,7 +21,6 @@ client.once(Events.ClientReady, c => {
 });
 
 client.on('messageCreate', async message => {
-    //console.log(message);
     var inputLine = message.content.split(' ');
     if (inputLine[0] == "ab!") {
         if (inputLine[1] == "score") {
@@ -42,6 +40,7 @@ client.on('messageCreate', async message => {
                 message.reply("Inputs are not acceptable. Please check them and try again. \nAdditionally, use `ab! help` for more info.");
             }
         } else if (inputLine[1] == "help") {
+            //Help function: Gives user help with bot functions
             message.reply(
                 "This discord bot uses a webscraper to grab information from aimlabs leaderboards.\n\n" +
                 "**score** help:\n" +
@@ -52,7 +51,24 @@ client.on('messageCreate', async message => {
                 "`*timePeriod`: The Time Period to search for. `a` for all time, `y` for the past year, `m` for the past month, and `w` for the past week\n" +
                 "**Example Usage**\n" +
                 "```ab! score derp gridshot u a```"
-            )
+            );
+        } else if (inputLine[1] == "add") {
+            userIn = inputLine[2];
+            nameIn = inputLine[3];
+            fR = await commands.addToList(userIn, nameIn);
+            if (fR == 0) {
+                message.reply("Username is already in the list");
+            } else if (fR == 1) {
+                message.reply("Username added to list");
+            }
+        } else if (inputLine[1] == "rm") {
+            userIn = inputLine[2];
+            fR = await commands.removeFromList(userIn);
+            if (fR == 0) {
+                message.reply("Username not found in list");
+            } else if (fR == 1) {
+                message.reply("Username removed from all instances in list");
+            }
         }
     }
 });
