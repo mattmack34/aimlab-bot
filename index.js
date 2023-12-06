@@ -30,13 +30,57 @@ client.on('messageCreate', async message => {
                 taskIn = inputLine[3];
                 taskMode = inputLine[4];
                 timePeriodIn = inputLine[5];
-
                 if ((acceptableInputs.accTask.indexOf(taskIn) > -1) && (acceptableInputs.accTimePeriod.indexOf(timePeriodIn) > -1)) {
                     try {
                         fR = await commands.getScore(userIn, taskIn, taskMode, timePeriodIn);
                         message.reply('\nRank: ' + fR[0] + '\nScore: ' + fR[1] + '\nAccuracy: ' + fR[2]);
                     } catch {
                         message.reply("Data not found. User could not have a score for this time period.");
+                    }
+                } else {
+                    message.reply("Inputs are not acceptable. Please check them and try again. \nAdditionally, use `ab! help` for more info.");
+                }
+            } catch (tryError) {
+                message.reply("Error in bot : " + tryError);
+            }
+        } else if (inputLine[1] == "add") {
+            //Add a given user to the list
+            try {
+                userIn = inputLine[2];
+                nameIn = inputLine[3];
+                fR = await commands.addToList(userIn, nameIn);
+                if (fR == 0) {
+                    message.reply("Username is already in the list");
+                } else if (fR == 1) {
+                    message.reply("Username added to list");
+                }
+            } catch (tryError) {
+                message.reply("Error in bot : " + tryError);
+            } 
+        } else if (inputLine[1] == "rm") {
+            //Remove a given user from the list
+            try {
+                userIn = inputLine[2];
+                fR = await commands.removeFromList(userIn);
+                if (fR == 0) {
+                    message.reply("Username not found in list");
+                } else if (fR == 1) {
+                    message.reply("Username removed from all instances in list");
+                }
+            } catch (tryError) {
+                message.reply("Error in bot : " + tryError);
+            }
+        } else if (inputLine[1] == "scoreboard") {
+            try {
+                taskIn = inputLine[2];
+                taskMode = inputLine[3];
+                timePeriodIn = inputLine[4];
+                if ((acceptableInputs.accTask.indexOf(taskIn) > -1) && (acceptableInputs.accTimePeriod.indexOf(timePeriodIn) > -1)) {
+                    try {
+                        fR = commands.createScoreboard(taskIn, taskMode, timePeriodIn);
+                        message.reply(fR);
+                    } catch (tryError) {
+                        message.reply("Error in bot : " + tryError);
                     }
                 } else {
                     message.reply("Inputs are not acceptable. Please check them and try again. \nAdditionally, use `ab! help` for more info.");
@@ -57,31 +101,6 @@ client.on('messageCreate', async message => {
                 "**Example Usage**\n" +
                 "```ab! score derp gridshot u a```"
             );
-        } else if (inputLine[1] == "add") {
-            try {
-                userIn = inputLine[2];
-                nameIn = inputLine[3];
-                fR = await commands.addToList(userIn, nameIn);
-                if (fR == 0) {
-                    message.reply("Username is already in the list");
-                } else if (fR == 1) {
-                    message.reply("Username added to list");
-                }
-            } catch (tryError) {
-                message.reply("Error in bot : " + tryError);
-            } 
-        } else if (inputLine[1] == "rm") {
-            try {
-                userIn = inputLine[2];
-                fR = await commands.removeFromList(userIn);
-                if (fR == 0) {
-                    message.reply("Username not found in list");
-                } else if (fR == 1) {
-                    message.reply("Username removed from all instances in list");
-                }
-            } catch (error) {
-                message.reply("Error in bot : " + tryError);
-            }
         }
     }
 });
