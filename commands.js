@@ -24,15 +24,22 @@ module.exports = {
         }
 
         link = 'https://aimlabs.com/leaderboards?username=' + user + '&taskId=' + task + '&period=' + timePeriod + '&taskMode=' + taskMode;
-        const browser = await puppeteer.launch();
+        const browser = await puppeteer.launch({headless: "new"});
         const page = await browser.newPage();
         await page.goto(link, {waitUntil: "networkidle0"});
         const pageHTML = await page.content();
         await browser.close();
         var $ = cheerio.load(pageHTML);
-        rank = $('td')[0].children[1].children[0].data;
-        score = $('td')[2].children[1].children[0].data;
-        accuracy = $('td')[6].children[1].children[0].data;
+        try {
+            rank = $('td')[0].children[1].children[0].data;
+            score = $('td')[2].children[1].children[0].data;
+            accuracy = $('td')[6].children[1].children[0].data;
+        } catch (error) {
+            rank = 0;
+            score = 0;
+            accuracy = 0;
+        }
+        
         return [rank, score, accuracy];
     },
 
@@ -91,7 +98,7 @@ module.exports = {
         }
 
         tempArr.sort((a, b) => (
-            parseInt(a.ovrRank, 10) > parseInt(b.ovrRank, 10) ? 1 : parseInt(b.ovrRank, 10) > parseInt(a.ovrRank, 10) ? -1 : 0));
+            parseInt(b.score, 10) > parseInt(a.score, 10) ? 1 : parseInt(a.score, 10) > parseInt(b.score, 10) ? -1 : 0));
 
         var t = new Table;
         tempArr.forEach(function(product) {
@@ -101,9 +108,6 @@ module.exports = {
             t.cell('Accuracy', accuracy),
             t.newRow()
         });
-
-        //console.log(t.toString());
         return (t.toString());
-
     }
 };
