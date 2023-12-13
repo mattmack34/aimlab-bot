@@ -71,6 +71,7 @@ client.on('messageCreate', async message => {
                 message.reply("Error in bot : " + tryError);
             }
         } else if (inputLine[1] == "scoreboard") {
+            //Creates a scoreboard of a given task
             try {
                 taskIn = inputLine[2];
                 taskMode = inputLine[3];

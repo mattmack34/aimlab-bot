@@ -39,7 +39,6 @@ module.exports = {
             score = 0;
             accuracy = 0;
         }
-        
         return [rank, score, accuracy];
     },
 
